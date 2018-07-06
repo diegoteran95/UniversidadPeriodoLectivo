@@ -72,4 +72,10 @@ public class PrlNrcFacade extends AbstractFacade<PrlNrc> {
         return q.getResultList();
     }
     
+    public PrlNrc listarInformacionNrc(String codNrc){
+        Query q = this.em.createQuery("SELECT obj FROM PrlNrc obj WHERE obj.prlNrcPK.codNrc = ?1");
+        q.setParameter(1, codNrc);
+        return (PrlNrc) q.getSingleResult();
+    }
+    
 }

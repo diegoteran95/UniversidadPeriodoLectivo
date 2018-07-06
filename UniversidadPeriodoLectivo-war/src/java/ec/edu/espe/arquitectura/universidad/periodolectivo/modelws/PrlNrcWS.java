@@ -14,6 +14,7 @@ public class PrlNrcWS {
     private String codPeriodo;
     private String codAsignatura;
     private String codPersona;
+    private Integer cantidadNrc;
 
     public PrlNrcWS() {
     }
@@ -49,6 +50,12 @@ public class PrlNrcWS {
     public void setCodPersona(String codPersona) {
         this.codPersona = codPersona;
     }
-    
-    
+
+    public Integer getCantidadNrc() {
+        return cantidadNrc;
+    }
+
+    public void setCantidadNrc(Integer cantidadNrc) {
+        this.cantidadNrc = cantidadNrc;
+    }
 }

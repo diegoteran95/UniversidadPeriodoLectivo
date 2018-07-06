@@ -45,7 +45,7 @@ public class PrlNrcService {
     public void generarNrc(Integer numNRC, String codPeriodo, String codAsignatura) {
 //        PrlNrc nrc=this.nrcFacade.find("0");
 //        this.nrcFacade.remove(nrc);
-        PrlPeriodoLectivo periodo = periodoFacade.buscarPeriodoPorId(codPeriodo);
+        PrlPeriodoLectivo periodo = new PrlPeriodoLectivo(codPeriodo);
         OrgAsignatura asignatura = new OrgAsignatura(codAsignatura);
         this.secuenciaNrc = 1;
         this.nrcGenerados = new ArrayList<PrlNrc>();
@@ -78,8 +78,9 @@ public class PrlNrcService {
     }
 
     public void asignarDocenteNRC(String codDocente, String codNrc) {
-        PrlNrc nrc = buscarNrcPorId(codNrc);
+        PrlNrc nrc = listarInformacionNrc(codNrc);
         nrc.setCodPersona(codDocente);
+        System.out.println("hola");
         nrcFacade.edit(nrc);
     }
 
@@ -123,6 +124,10 @@ public class PrlNrcService {
 
     public List<PrlNrc> listarNrcDocente(String codPeriodo, String codDocente) {
         return nrcFacade.listarNrcDocente(codPeriodo, codDocente);
+    }
+    
+    public PrlNrc listarInformacionNrc(String codNrc){
+        return nrcFacade.listarInformacionNrc(codNrc);
     }
 
 }
