@@ -42,7 +42,7 @@ public class PrlMatriculaService {
     }
 
     public void matriculacion(String codPeriodo, String codEstudiante, String codNrcs) {
-        PrlPeriodoLectivo periodo = periodoFacade.buscarPeriodoPorId(codPeriodo);
+        PrlPeriodoLectivo periodo =  new PrlPeriodoLectivo(codPeriodo);;
 //        List<PrlDetalleMatricula> detalleMatricula = new ArrayList<PrlDetalleMatricula>();
 //        String[] detalles = codNrcs.split("\\*");
 //        for (int i = 0; i < detalles.length; i++) {
@@ -71,5 +71,9 @@ public class PrlMatriculaService {
         } catch (Exception ex) {
             System.out.println("Ocurrí\u00f3 un error al guardar la matrícula");
         }
+    }
+    
+    public void guardarDetalleMatricula(String codPeriodo, String codNrc, String codNrcs){
+        
     }
 }

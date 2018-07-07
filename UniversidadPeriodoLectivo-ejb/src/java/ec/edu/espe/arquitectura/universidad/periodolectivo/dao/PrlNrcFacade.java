@@ -5,7 +5,6 @@
  */
 package ec.edu.espe.arquitectura.universidad.periodolectivo.dao;
 
-import ec.edu.espe.arquitectura.universidad.periodolectivo.model.OrgAsignatura;
 import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlNrc;
 import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlPeriodoLectivo;
 import java.util.List;
@@ -33,13 +32,13 @@ public class PrlNrcFacade extends AbstractFacade<PrlNrc> {
         super(PrlNrc.class);
     }
     
-    public List<PrlNrc> listarNrcAsignatura(OrgAsignatura codAsignatura) {
+    public List<PrlNrc> listarNrcAsignatura(String codAsignatura) {
         Query q = this.em.createQuery("SELECT obj FROM PrlNrc obj WHERE obj.codAsignatura = ?1");
         q.setParameter(1, codAsignatura);
         return q.getResultList();
 }
 
-    public List<PrlNrc> listarNrcAsignaturaPeriodo(OrgAsignatura codAsignatura, PrlPeriodoLectivo codPeriodo) {
+    public List<PrlNrc> listarNrcAsignaturaPeriodo(String codAsignatura, PrlPeriodoLectivo codPeriodo) {
         Query q = this.em.createQuery("SELECT obj FROM PrlNrc obj WHERE obj.codAsignatura = ?1 AND obj.prlPeriodoLectivo = ?2");
         q.setParameter(1, codAsignatura);
         q.setParameter(2, codPeriodo);

@@ -31,21 +31,14 @@ public class PrlNrc implements Serializable {
 
     @Column(name = "COD_PERSONA", nullable = false, length = 20)
     private String codPersona;
-
+    
+    @Column(name = "COD_ASIGNATURA", nullable=false,length = 5)
+    private String codAsignatura;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "prlNrc", fetch = FetchType.LAZY)
     private List<PrlDetalleMatricula> prlDetalleMatriculaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prlNrc", fetch = FetchType.LAZY)
-    private List<EvaRespuestaCuestionario> evaRespuestaCuestionarioList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prlNrc", fetch = FetchType.LAZY)
-    private List<EvaResultadoEvaluacion> evaResultadoEvaluacionList;
-    @JoinColumn(name = "COD_ASIGNATURA", referencedColumnName = "COD_ASIGNATURA")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private OrgAsignatura codAsignatura;
     @JoinColumn(name = "COD_PERIODO", referencedColumnName = "COD_PERIODO", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private PrlPeriodoLectivo prlPeriodoLectivo;
-    @OneToMany(mappedBy = "prlNrc", fetch = FetchType.LAZY)
-    private List<EfhHorario> efhHorarioList;
 
     public PrlNrc() {
     }
@@ -54,9 +47,9 @@ public class PrlNrc implements Serializable {
         this.prlNrcPK = prlNrcPK;
     }
 
-    public PrlNrc(PrlNrcPK prlNrcPK, String codPersona) {
+    public PrlNrc(PrlNrcPK prlNrcPK, String codAsignatura) {
         this.prlNrcPK = prlNrcPK;
-        this.codPersona = codPersona;
+        this.codAsignatura = codAsignatura;
     }
 
     public PrlNrc(String codNrc, String codPeriodo) {
@@ -79,6 +72,14 @@ public class PrlNrc implements Serializable {
         this.codPersona = codPersona;
     }
 
+    public String getCodAsignatura() {
+        return codAsignatura;
+    }
+
+    public void setCodAsignatura(String codAsignatura) {
+        this.codAsignatura = codAsignatura;
+    }
+
     public List<PrlDetalleMatricula> getPrlDetalleMatriculaList() {
         return prlDetalleMatriculaList;
     }
@@ -87,44 +88,12 @@ public class PrlNrc implements Serializable {
         this.prlDetalleMatriculaList = prlDetalleMatriculaList;
     }
 
-    public List<EvaRespuestaCuestionario> getEvaRespuestaCuestionarioList() {
-        return evaRespuestaCuestionarioList;
-    }
-
-    public void setEvaRespuestaCuestionarioList(List<EvaRespuestaCuestionario> evaRespuestaCuestionarioList) {
-        this.evaRespuestaCuestionarioList = evaRespuestaCuestionarioList;
-    }
-
-    public List<EvaResultadoEvaluacion> getEvaResultadoEvaluacionList() {
-        return evaResultadoEvaluacionList;
-    }
-
-    public void setEvaResultadoEvaluacionList(List<EvaResultadoEvaluacion> evaResultadoEvaluacionList) {
-        this.evaResultadoEvaluacionList = evaResultadoEvaluacionList;
-    }
-
-    public OrgAsignatura getCodAsignatura() {
-        return codAsignatura;
-    }
-
-    public void setCodAsignatura(OrgAsignatura codAsignatura) {
-        this.codAsignatura = codAsignatura;
-    }
-
     public PrlPeriodoLectivo getPrlPeriodoLectivo() {
         return prlPeriodoLectivo;
     }
 
     public void setPrlPeriodoLectivo(PrlPeriodoLectivo prlPeriodoLectivo) {
         this.prlPeriodoLectivo = prlPeriodoLectivo;
-    }
-
-    public List<EfhHorario> getEfhHorarioList() {
-        return efhHorarioList;
-    }
-
-    public void setEfhHorarioList(List<EfhHorario> efhHorarioList) {
-        this.efhHorarioList = efhHorarioList;
     }
 
     @Override

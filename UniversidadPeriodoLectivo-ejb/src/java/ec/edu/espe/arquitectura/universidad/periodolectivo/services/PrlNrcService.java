@@ -6,11 +6,9 @@
 package ec.edu.espe.arquitectura.universidad.periodolectivo.services;
 
 import ec.edu.espe.arquitectura.universidad.periodolectivo.dao.PrlNrcFacade;
-import ec.edu.espe.arquitectura.universidad.periodolectivo.model.OrgAsignatura;
 import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlNrc;
 import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlNrcPK;
 import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlPeriodoLectivo;
-import ec.edu.espe.arquitectura.universidad.periodolectivo.ws.ResponseWS;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +44,6 @@ public class PrlNrcService {
 //        PrlNrc nrc=this.nrcFacade.find("0");
 //        this.nrcFacade.remove(nrc);
         PrlPeriodoLectivo periodo = new PrlPeriodoLectivo(codPeriodo);
-        OrgAsignatura asignatura = new OrgAsignatura(codAsignatura);
         this.secuenciaNrc = 1;
         this.nrcGenerados = new ArrayList<PrlNrc>();
         this.nrcExistentes = listarNrcs();
@@ -62,12 +59,12 @@ public class PrlNrcService {
             for (int j = 0; j < cantNRC; j++) {
                 PrlNrc nuevoNrc = new PrlNrc();
                 nuevoNrc.setPrlNrcPK(new PrlNrcPK("N-" + formateador.format(this.secuenciaNrc), periodo.getCodPeriodo()));
-                nuevoNrc.setCodAsignatura(asignatura);
+                nuevoNrc.setCodAsignatura(codAsignatura);
                 nuevoNrc.setCodPersona(null);
                 this.nrcGenerados.add(nuevoNrc);
                 try {
                     this.nrcFacade.create(nuevoNrc);
-                    System.out.println("Se agregó el Nrc: " + nuevoNrc.getPrlNrcPK().getCodNrc() + ", para la materia" + asignatura.getNombre());
+                    System.out.println("Se agregó el Nrc: " + nuevoNrc.getPrlNrcPK().getCodNrc() + ", para la materia" );
                 } catch (Exception ex) {
                     System.out.println("Ocurrí\u00f3 un error al generar los Nrc");
                 }
@@ -90,8 +87,7 @@ public class PrlNrcService {
 //    }
     public List<PrlNrc> listarNrcAsignaturaPeriodo(String codAsignatura, String codPeriodo) {
         PrlPeriodoLectivo periodo = this.periodoFacade.buscarPeriodoPorId(codPeriodo);
-        OrgAsignatura asignatura = new OrgAsignatura(codAsignatura);
-        return nrcFacade.listarNrcAsignaturaPeriodo(asignatura, periodo);
+        return nrcFacade.listarNrcAsignaturaPeriodo(codAsignatura, periodo);
     }
 
     public List<PrlNrc> listarNrcPorPeriodo(String codPeriodo) {

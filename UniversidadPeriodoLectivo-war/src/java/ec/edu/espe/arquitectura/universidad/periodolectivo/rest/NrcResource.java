@@ -63,7 +63,7 @@ public class NrcResource {
                     PrlNrcWS nrcAux = new PrlNrcWS();
                     nrcAux.setCodNrc(nrc.getPrlNrcPK().getCodNrc());
                     nrcAux.setCodPeriodo(nrc.getPrlNrcPK().getCodPeriodo());
-                    nrcAux.setCodAsignatura(nrc.getCodAsignatura().getCodAsignatura());
+                    nrcAux.setCodAsignatura(nrc.getCodAsignatura());
                     nrcAux.setCodPersona(nrc.getCodPersona());
                     nrcWs.add(nrcAux);
                 }
@@ -92,7 +92,7 @@ public class NrcResource {
                     PrlNrcWS nrcAux = new PrlNrcWS();
                     nrcAux.setCodNrc(nrc.getPrlNrcPK().getCodNrc());
                     nrcAux.setCodPeriodo(nrc.getPrlNrcPK().getCodPeriodo());
-                    nrcAux.setCodAsignatura(nrc.getCodAsignatura().getCodAsignatura());
+                    nrcAux.setCodAsignatura(nrc.getCodAsignatura());
                     nrcAux.setCodPersona(nrc.getCodPersona());
                     nrcWs.add(nrcAux);
                 }
