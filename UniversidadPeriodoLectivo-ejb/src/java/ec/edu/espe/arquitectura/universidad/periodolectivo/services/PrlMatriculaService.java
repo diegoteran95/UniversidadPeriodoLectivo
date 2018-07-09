@@ -6,12 +6,14 @@
 package ec.edu.espe.arquitectura.universidad.periodolectivo.services;
 
 import ec.edu.espe.arquitectura.universidad.periodolectivo.dao.PrlMatriculaFacade;
+import ec.edu.espe.arquitectura.universidad.periodolectivo.enums.PrlDetalleMatriculaEnum;
 import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlDetalleMatricula;
+import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlDetalleMatriculaPK;
+import static ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlDetalleMatricula_.prlDetalleMatriculaPK;
 import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlMatricula;
 import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlPeriodoLectivo;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -40,9 +42,13 @@ public class PrlMatriculaService {
     public List<PrlMatricula> obtenerMatriculas() {
         return matriculaFacade.findAll();
     }
+    
+    public List<PrlDetalleMatricula> obtenerDetalleMatricula() {
+        return detalleMatriculaFacade.obtenerDetallesMatricula();
+    }
 
     public void matriculacion(String codPeriodo, String codEstudiante, String codNrcs) {
-        PrlPeriodoLectivo periodo =  new PrlPeriodoLectivo(codPeriodo);;
+        PrlPeriodoLectivo periodo = new PrlPeriodoLectivo(codPeriodo);;
 //        List<PrlDetalleMatricula> detalleMatricula = new ArrayList<PrlDetalleMatricula>();
 //        String[] detalles = codNrcs.split("\\*");
 //        for (int i = 0; i < detalles.length; i++) {
@@ -66,14 +72,29 @@ public class PrlMatriculaService {
             matricula.setPagado("NO");
             matricula.setCodPersona(codEstudiante);
             this.matriculaFacade.create(matricula);
-            //guardarDetalleMatricula(matricula);
+            guardarDetalleMatricula(codPeriodo, codNrcs, codMatricula);
 //            Messages.addFlashGlobalInfo("Se agregó el Nrc: " + nuevoNrc.getNrcPK().getCodNrc() + ", para la materia" + this.asignaturaSeleccionada.getNombre());
         } catch (Exception ex) {
             System.out.println("Ocurrí\u00f3 un error al guardar la matrícula");
         }
     }
-    
-    public void guardarDetalleMatricula(String codPeriodo, String codNrc, String codNrcs){
-        
+
+    public void guardarDetalleMatricula(String codPeriodo, String codNrcs, String codMatricula) {
+        String[] nrcs = codNrcs.split("\\*");
+        PrlDetalleMatriculaPK detallePK = new PrlDetalleMatriculaPK();
+        detallePK.setCodMatricula(codMatricula);
+        detallePK.setCodPeriodo(codPeriodo);
+
+        for (int i = 0; i < nrcs.length; i++) {
+            PrlDetalleMatricula detalle = new PrlDetalleMatricula();
+            detallePK.setCodNrc(nrcs[i]);
+            detalle.setAprobacionNrc(PrlDetalleMatriculaEnum.NO);
+            detalle.setPrlDetalleMatriculaPK(detallePK);
+            try {
+                this.detalleMatriculaFacade.crearDetalleMatricula(detalle);
+            } catch (Exception ex) {
+                System.out.println("Error al insertar el detalle de matricula");
+            }
+        }
     }
 }

@@ -26,4 +26,16 @@ public class PrlDetalleMatriculaService {
     public PrlDetalleMatricula obtenerDetalleMatriculaPorId(String codDetMat){
         return detalleMatFacade.find(codDetMat);
     }
+    
+    public void crearDetalleMatricula(PrlDetalleMatricula detalle){
+        detalleMatFacade.create(detalle);
+    }
+    
+    public List<PrlDetalleMatricula> obtenerDetallesMatricula(){
+        return detalleMatFacade.findAll();
+    }
+    
+    public List<PrlDetalleMatricula> listarNrcEstudiante(String codPeriodo,String codPersona){
+        return detalleMatFacade.listarNrcEstudiante(codPeriodo, codPersona);
+    }
 }
