@@ -46,6 +46,10 @@ public class PrlMatriculaService {
     public List<PrlDetalleMatricula> obtenerDetalleMatricula() {
         return detalleMatriculaFacade.obtenerDetallesMatricula();
     }
+    
+    public List<PrlMatricula> obtenerMatricula(String codPeriodo,String codPersona) {
+        return matriculaFacade.listarMatriculaEstudiante(codPeriodo, codPersona);
+    }
 
     public void matriculacion(String codPeriodo, String codEstudiante, String codNrcs) {
         PrlPeriodoLectivo periodo = new PrlPeriodoLectivo(codPeriodo);;

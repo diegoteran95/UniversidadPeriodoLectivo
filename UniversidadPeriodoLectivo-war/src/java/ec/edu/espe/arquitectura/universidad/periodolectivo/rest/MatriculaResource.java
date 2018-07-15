@@ -40,7 +40,7 @@ public class MatriculaResource {
 
     @Inject
     private PrlMatriculaService matriculaService;
-    
+
     @Inject
     private PrlDetalleMatriculaService detalleMatriculaService;
 
@@ -60,7 +60,7 @@ public class MatriculaResource {
     @Path("obtenerMatriculas")
     @Produces(MediaType.APPLICATION_JSON)
     public Response obtenerMatriculas() {
-        
+
         List<PrlMatriculaWS> matriculaWs = new ArrayList<PrlMatriculaWS>();
         try {
             List<PrlMatricula> matriculas = matriculaService.obtenerMatriculas();
@@ -76,13 +76,13 @@ public class MatriculaResource {
                     matriculaAux.setPagado(mat.getPagado());
                     for (int i = 0; i < mat.getPrlDetalleMatriculaList().size(); i++) {
 //                        if (mat.getPrlDetalleMatriculaList().get(i).getPrlDetalleMatriculaPK().getCodMatricula().equals(matriculaAux.getCodMatricula())) {
-                            PrlDetalleMatriculaWS det = new PrlDetalleMatriculaWS();
-                            det.setCodNrc(mat.getPrlDetalleMatriculaList().get(i).getPrlDetalleMatriculaPK().getCodNrc());
-                            det.setCodPeriodo(mat.getPrlDetalleMatriculaList().get(i).getPrlDetalleMatriculaPK().getCodPeriodo());
-                            det.setCodMatricula(mat.getPrlDetalleMatriculaList().get(i).getPrlDetalleMatriculaPK().getCodMatricula());
-                            det.setCostoNrc(mat.getPrlDetalleMatriculaList().get(i).getCostoNrc());
-                            det.setAprobacionNrc(mat.getPrlDetalleMatriculaList().get(i).getAprobacionNrc().getTexto());
-                            detalleMatricula.add(det);
+                        PrlDetalleMatriculaWS det = new PrlDetalleMatriculaWS();
+                        det.setCodNrc(mat.getPrlDetalleMatriculaList().get(i).getPrlDetalleMatriculaPK().getCodNrc());
+                        det.setCodPeriodo(mat.getPrlDetalleMatriculaList().get(i).getPrlDetalleMatriculaPK().getCodPeriodo());
+                        det.setCodMatricula(mat.getPrlDetalleMatriculaList().get(i).getPrlDetalleMatriculaPK().getCodMatricula());
+                        det.setCostoNrc(mat.getPrlDetalleMatriculaList().get(i).getCostoNrc());
+                        det.setAprobacionNrc(mat.getPrlDetalleMatriculaList().get(i).getAprobacionNrc().getTexto());
+                        detalleMatricula.add(det);
 //                        }
                     }
                     matriculaAux.setDetalleMatricula(detalleMatricula);
@@ -97,31 +97,49 @@ public class MatriculaResource {
             return Response.serverError().build();
         }
     }
-    
+
     @POST
     @Path("listarNrcEstudiante")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response listarNrcPorDocente(PrlMatriculaWS matriculaBuscar) {
         //TODO return proper representation object
+        List<PrlMatriculaWS> matriculasWS = new ArrayList<>();
         List<PrlDetalleMatriculaWS> detalleMatriculaWs = new ArrayList<PrlDetalleMatriculaWS>();
         try {
-            List<PrlDetalleMatricula> detalles = this.detalleMatriculaService.listarNrcEstudiante(matriculaBuscar.getCodPeriodo(), matriculaBuscar.getCodPersona());
-            if (detalles != null && detalles.size() > 0) {
-                for (PrlDetalleMatricula det : detalles) {
-                    PrlDetalleMatriculaWS detalleAux = new PrlDetalleMatriculaWS();
-                    detalleAux.setCodMatricula(det.getPrlDetalleMatriculaPK().getCodMatricula());
-                    detalleAux.setCodNrc(det.getPrlDetalleMatriculaPK().getCodNrc());
-                    detalleAux.setCodPeriodo(det.getPrlDetalleMatriculaPK().getCodPeriodo());
-                    detalleAux.setCostoNrc(det.getCostoNrc());
-                    detalleAux.setAprobacionNrc(det.getAprobacionNrc().getTexto());
-                    detalleMatriculaWs.add(detalleAux);
+            List<PrlMatricula> matricula = this.matriculaService.obtenerMatricula(matriculaBuscar.getCodPeriodo(), matriculaBuscar.getCodPersona());
+            if (matricula != null) {
+                for (PrlMatricula mat : matricula) {
+                    detalleMatriculaWs = new ArrayList<PrlDetalleMatriculaWS>();
+                    PrlMatriculaWS matriculaAux = new PrlMatriculaWS();
+                    matriculaAux.setCodMatricula(mat.getCodMatricula());
+                    matriculaAux.setCodPeriodo(mat.getCodPeriodo().getCodPeriodo());
+                    matriculaAux.setCodPersona(mat.getCodPersona());
+                    matriculaAux.setPromedio(mat.getPromedio());
+                    matriculaAux.setCostoMatricula(mat.getCostoMatricula());
+                    matriculaAux.setPagado(mat.getPagado());
+
+                    List<PrlDetalleMatricula> detalles = this.detalleMatriculaService.listarNrcEstudiante(matriculaBuscar.getCodPeriodo(), matriculaBuscar.getCodPersona());
+                    if (detalles != null && detalles.size() > 0) {
+                        for (PrlDetalleMatricula det : detalles) {
+                            PrlDetalleMatriculaWS detalleAux = new PrlDetalleMatriculaWS();
+                            detalleAux.setCodMatricula(det.getPrlDetalleMatriculaPK().getCodMatricula());
+                            detalleAux.setCodNrc(det.getPrlDetalleMatriculaPK().getCodNrc());
+                            detalleAux.setCodPeriodo(det.getPrlDetalleMatriculaPK().getCodPeriodo());
+                            detalleAux.setCostoNrc(det.getCostoNrc());
+                            detalleAux.setAprobacionNrc(det.getAprobacionNrc().getTexto());
+                            detalleMatriculaWs.add(detalleAux);
+                        }
+                        matriculaAux.setDetalleMatricula(detalleMatriculaWs);
+                        matriculasWS.add(matriculaAux);
+
+                    }
                 }
-                return Response.ok(detalleMatriculaWs).build();
+                return Response.ok(matriculasWS).build();
             } else {
                 return Response.ok(Response.Status.NOT_FOUND).build();
-//            return Response.status(Response.Status.NOT_FOUND).build();
             }
+
         } catch (Exception ex) {
             return Response.serverError().build();
         }
