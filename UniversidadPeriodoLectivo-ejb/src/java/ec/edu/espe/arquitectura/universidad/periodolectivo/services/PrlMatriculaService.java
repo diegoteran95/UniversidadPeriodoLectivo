@@ -57,8 +57,9 @@ public class PrlMatriculaService {
         return matriculaFacade.listarMatriculaEstudiante(codPeriodo, codPersona);
     }
 
-    public void matriculacion(String codPeriodo, String codEstudiante, String codNrcs) {
+    public boolean matriculacion(String codPeriodo, String codEstudiante, String codNrcs) {
         PrlPeriodoLectivo periodo = new PrlPeriodoLectivo(codPeriodo);;
+        boolean band = false;
 //        List<PrlDetalleMatricula> detalleMatricula = new ArrayList<PrlDetalleMatricula>();
 //        String[] detalles = codNrcs.split("\\*");
 //        for (int i = 0; i < detalles.length; i++) {
@@ -81,12 +82,25 @@ public class PrlMatriculaService {
             matricula.setPromedio(new BigDecimal("0"));
             matricula.setPagado("NO");
             matricula.setCodPersona(codEstudiante);
-            this.matriculaFacade.create(matricula);
-            guardarDetalleMatricula(codPeriodo, codNrcs, codMatricula);
+            for (int i = 0; i < matriculasExistentes.size(); i++) {
+                if (matriculasExistentes.get(i).getCodPersona().equals(matricula.getCodPersona()) && matriculasExistentes.get(i).getCodPeriodo().equals(matricula.getCodPeriodo())) {
+                    band = true;
+                    break;
+                }
+            }
+            if (!band) {
+                this.matriculaFacade.create(matricula);
+                guardarDetalleMatricula(codPeriodo, codNrcs, codMatricula);
+                return true;
+            } else {
+                return false;
+            }
+
 //            Messages.addFlashGlobalInfo("Se agregó el Nrc: " + nuevoNrc.getNrcPK().getCodNrc() + ", para la materia" + this.asignaturaSeleccionada.getNombre());
         } catch (Exception ex) {
             System.out.println("Ocurrí\u00f3 un error al guardar la matrícula");
         }
+        return false;
     }
 
     public void guardarDetalleMatricula(String codPeriodo, String codNrcs, String codMatricula) {

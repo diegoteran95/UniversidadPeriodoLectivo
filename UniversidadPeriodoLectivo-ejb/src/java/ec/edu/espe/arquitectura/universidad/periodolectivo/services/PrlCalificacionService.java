@@ -32,4 +32,12 @@ public class PrlCalificacionService {
         this.calificacionFacade.create(calificacion);
     }
     
+    public void modificarNota(PrlCalificacion calificacion){
+        this.calificacionFacade.edit(calificacion);
+    }
+    
+    public PrlCalificacion buscarNotaAlumno(String codNrc, String codPersona, Integer secuencial){
+        return this.calificacionFacade.buscarNotaPorId(codNrc, codPersona, secuencial);
+    }
+    
 }

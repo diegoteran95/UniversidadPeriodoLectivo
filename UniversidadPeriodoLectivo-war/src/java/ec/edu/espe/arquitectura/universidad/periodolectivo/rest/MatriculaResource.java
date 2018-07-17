@@ -156,8 +156,13 @@ public class MatriculaResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response matriculacion(PrlMatriculaWS matricula) {
         try {
-            this.matriculaService.matriculacion(matricula.getCodPeriodo(), matricula.getCodPersona(), matricula.getCodNrc());
-            return Response.ok(Response.Status.CREATED).build();
+            boolean band = this.matriculaService.matriculacion(matricula.getCodPeriodo(), matricula.getCodPersona(), matricula.getCodNrc());
+            if (band) {
+                return Response.ok(Response.Status.CREATED).build();
+            } else {
+                return Response.status(404).build();
+            }
+
         } catch (Exception ex) {
             return Response.serverError().build();
         }

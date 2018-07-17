@@ -67,4 +67,19 @@ public class CalificacionResource {
         }
     }
     
+    @POST
+    @Path("modificarNota")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response modificarNota(PrlCalificacionWS calificacionBuscar) {
+        try {
+            PrlCalificacion calificacion=this.calificacionService.buscarNotaAlumno(calificacionBuscar.getCodNrc(), calificacionBuscar.getCodPersona(), calificacionBuscar.getSecCalificacion());
+            calificacion.setPuntaje(calificacionBuscar.getPuntaje());
+            this.calificacionService.modificarNota(calificacion);
+            return Response.ok(Response.Status.OK).build();
+        } catch (Exception ex) {
+            return Response.serverError().build();
+        }
+    }
+    
 }

@@ -30,12 +30,20 @@ public class PrlCalificacionFacade extends AbstractFacade<PrlCalificacion> {
     public PrlCalificacionFacade() {
         super(PrlCalificacion.class);
     }
-    
+
     public List<PrlCalificacion> listarCalificacionEstudiante(String codNrc, String codPersona) {
         Query q = this.em.createQuery("SELECT obj FROM PrlCalificacion obj WHERE obj.prlDetalleMatricula.prlMatricula.codPersona = ?1 AND obj.prlCalificacionPK.codNrc = ?2");
         q.setParameter(1, codPersona);
         q.setParameter(2, codNrc);
         return q.getResultList();
     }
-    
+
+    public PrlCalificacion buscarNotaPorId(String codNrc, String codPersona, Integer secuencial) {
+        Query q = this.em.createQuery("SELECT obj FROM PrlCalificacion obj WHERE obj.prlDetalleMatricula.prlMatricula.codPersona = ?1 AND obj.prlCalificacionPK.codNrc = ?2 AND obj.prlCalificacionPK.secCalificacion = ?3");
+        q.setParameter(1, codPersona);
+        q.setParameter(2, codNrc);
+        q.setParameter(3, secuencial);
+        return (PrlCalificacion) q.getSingleResult();
+    }
+
 }
