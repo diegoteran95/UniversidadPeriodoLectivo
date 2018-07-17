@@ -33,6 +33,7 @@ public class ApplicationConfig extends Application {
 //        resources.add(ec.edu.espe.arquitectura.rest.LocalidadResource.class);
 //        resources.add(ec.edu.espe.arquitectura.rest.TaquillaResource.class);
 //        resources.add(ec.edu.espe.arquitectura.rest.VentasResource.class);
+        resources.add(ec.edu.espe.arquitectura.universidad.periodolectivo.rest.CalificacionResource.class);
         resources.add(ec.edu.espe.arquitectura.universidad.periodolectivo.rest.MatriculaResource.class);
         resources.add(ec.edu.espe.arquitectura.universidad.periodolectivo.rest.NrcResource.class);
         resources.add(ec.edu.espe.arquitectura.universidad.periodolectivo.rest.PeriodolectivoResource.class);

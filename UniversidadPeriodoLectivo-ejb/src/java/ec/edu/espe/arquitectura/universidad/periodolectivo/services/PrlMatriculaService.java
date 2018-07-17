@@ -7,10 +7,13 @@ package ec.edu.espe.arquitectura.universidad.periodolectivo.services;
 
 import ec.edu.espe.arquitectura.universidad.periodolectivo.dao.PrlMatriculaFacade;
 import ec.edu.espe.arquitectura.universidad.periodolectivo.enums.PrlDetalleMatriculaEnum;
+import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlCalificacion;
+import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlCalificacionPK;
 import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlDetalleMatricula;
 import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlDetalleMatriculaPK;
 import static ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlDetalleMatricula_.prlDetalleMatriculaPK;
 import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlMatricula;
+import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlNrc;
 import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlPeriodoLectivo;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -36,18 +39,21 @@ public class PrlMatriculaService {
     @EJB
     private PrlDetalleMatriculaService detalleMatriculaFacade;
 
+    @EJB
+    private PrlCalificacionService calificacionFacade;
+
     private Integer secuenciaMatricula;
     private List<PrlMatricula> matriculasExistentes;
 
     public List<PrlMatricula> obtenerMatriculas() {
         return matriculaFacade.findAll();
     }
-    
+
     public List<PrlDetalleMatricula> obtenerDetalleMatricula() {
         return detalleMatriculaFacade.obtenerDetallesMatricula();
     }
-    
-    public List<PrlMatricula> obtenerMatricula(String codPeriodo,String codPersona) {
+
+    public List<PrlMatricula> obtenerMatricula(String codPeriodo, String codPersona) {
         return matriculaFacade.listarMatriculaEstudiante(codPeriodo, codPersona);
     }
 
@@ -62,13 +68,13 @@ public class PrlMatriculaService {
         this.matriculasExistentes = obtenerMatriculas();
         if (!this.matriculasExistentes.isEmpty()) {
             Integer ultimoHorario = this.matriculasExistentes.size();
-            this.secuenciaMatricula = Integer.parseInt(this.matriculasExistentes.get(ultimoHorario - 1).getCodMatricula().split("M")[1]);
+            this.secuenciaMatricula = Integer.parseInt(this.matriculasExistentes.get(ultimoHorario - 1).getCodMatricula().split("-")[1]);
             this.secuenciaMatricula++;
         }
-        DecimalFormat formateador = new DecimalFormat("000000000");
+        DecimalFormat formateador = new DecimalFormat("00000000");
         try {
             PrlMatricula matricula = new PrlMatricula();
-            String codMatricula = "M" + formateador.format(this.secuenciaMatricula);
+            String codMatricula = "M-" + formateador.format(this.secuenciaMatricula);
             matricula.setCodMatricula(codMatricula);
             matricula.setCodPeriodo(periodo);
             matricula.setCostoMatricula(new BigDecimal("0"));
@@ -85,17 +91,24 @@ public class PrlMatriculaService {
 
     public void guardarDetalleMatricula(String codPeriodo, String codNrcs, String codMatricula) {
         String[] nrcs = codNrcs.split("\\*");
-        PrlDetalleMatriculaPK detallePK = new PrlDetalleMatriculaPK();
-        detallePK.setCodMatricula(codMatricula);
-        detallePK.setCodPeriodo(codPeriodo);
 
         for (int i = 0; i < nrcs.length; i++) {
+            PrlDetalleMatriculaPK detallePK = new PrlDetalleMatriculaPK();
+            detallePK.setCodMatricula(codMatricula);
+            detallePK.setCodPeriodo(codPeriodo);
             PrlDetalleMatricula detalle = new PrlDetalleMatricula();
             detallePK.setCodNrc(nrcs[i]);
             detalle.setAprobacionNrc(PrlDetalleMatriculaEnum.NO);
             detalle.setPrlDetalleMatriculaPK(detallePK);
             try {
                 this.detalleMatriculaFacade.crearDetalleMatricula(detalle);
+                for (int j = 0; j < 3; j++) {
+                    PrlCalificacion calificacion = new PrlCalificacion();
+                    calificacion.setPrlCalificacionPK(new PrlCalificacionPK(codMatricula, nrcs[i], codPeriodo, (j + 1)));
+                    calificacion.setPuntaje(BigDecimal.ZERO);
+                    this.calificacionFacade.crearCalificacion(calificacion);
+                }
+
             } catch (Exception ex) {
                 System.out.println("Error al insertar el detalle de matricula");
             }

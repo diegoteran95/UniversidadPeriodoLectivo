@@ -6,9 +6,11 @@
 package ec.edu.espe.arquitectura.universidad.periodolectivo.dao;
 
 import ec.edu.espe.arquitectura.universidad.periodolectivo.model.PrlCalificacion;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -27,6 +29,13 @@ public class PrlCalificacionFacade extends AbstractFacade<PrlCalificacion> {
 
     public PrlCalificacionFacade() {
         super(PrlCalificacion.class);
+    }
+    
+    public List<PrlCalificacion> listarCalificacionEstudiante(String codNrc, String codPersona) {
+        Query q = this.em.createQuery("SELECT obj FROM PrlCalificacion obj WHERE obj.prlDetalleMatricula.prlMatricula.codPersona = ?1 AND obj.prlCalificacionPK.codNrc = ?2");
+        q.setParameter(1, codPersona);
+        q.setParameter(2, codNrc);
+        return q.getResultList();
     }
     
 }
